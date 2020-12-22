@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int n,k;
+vector<vector<int>> seat;
+
+bool check_reduplication(vector<vector<int>> &seat, int &id){
+    for(int j=0;j<seat.size();j++){
+        if (seat[j][1]==id){
+            if(seat[j][0]==0){seat.erase(seat.end());};
+            seat.erase(seat.begin()+j);
+            return true;
+        }
+    }
+    return false;
+}
+
+
+int main(){
+    cin >> n >> k;
+
+    //about only 1st Input
+    int id1;
+    cin >>id1;
+    seat.push_back(vector<int> {0,id1});
+    seat.push_back(vector<int> {n,id1});
+    cout<<seat[0][1]<<" "<<seat[0][0]+1<<endl;
+
+    for(int i=1;i<k;i++){
+        int id;
+        cin >> id;
+
+        //reduplication check
+        if (check_reduplication(seat,id)==true){continue;}
+
+        //maximum={real seat num,length, idx in vector}
+        vector<int> maximum=vector<int>{0,0,0};
+        for(int j=0; j<seat.size()-1; j++){
+            int length=seat[j+1][0] - seat[j][0];
+            if (length>maximum[1]){
+                int tmp=seat[j+1][0] + seat[j][0];
+                maximum={tmp/2,length,j+1};
+            }
+        }
+
+
+        seat.insert(seat.begin()+maximum[2],vector<int> {maximum[0],id});
+
+        cout<<id<<" "<<maximum[0]+1<<endl;
+    }
+}
+
